@@ -1,14 +1,15 @@
 # Nabil Canan
-import json
 import sys
 import requests
 from secrets import wufoo_key
 from requests.auth import HTTPBasicAuth
+import json
 
 
 def get_wufoo_data() -> dict:
-    url = "https://nabilcanan.wufoo.com/api/v3/forms/cubess-project-submission/entries/count/json"
+    url = "https://nabilcanan.wufoo.com/api/v3/forms/zhc4c2c17puvvi/entries/json"
     response = requests.get(url, auth=HTTPBasicAuth(wufoo_key, 'pass'))
+    print(response.text)
 
     if response.status_code != 200:
         print(f"Failed to get data, response code:{response.status_code} and error message: {response.reason} ")
