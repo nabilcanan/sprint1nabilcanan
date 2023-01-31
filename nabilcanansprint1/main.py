@@ -1,3 +1,4 @@
+# Nabil Canan
 import json
 import sys
 import requests
@@ -6,14 +7,14 @@ from requests.auth import HTTPBasicAuth
 
 
 def get_wufoo_data() -> dict:
-    url = "http://{subdomain}.wufoo.com/api/v3/forms/{identifier}/entries/count.{format}"
+    url = "https://nabilcanan.wufoo.com/api/v3/forms/cubess-project-submission/entries/count/json"
     response = requests.get(url, auth=HTTPBasicAuth(wufoo_key, 'pass'))
 
-    if response.status_code != 200:  # if we don't get an ok response we have trouble
+    if response.status_code != 200:
         print(f"Failed to get data, response code:{response.status_code} and error message: {response.reason} ")
         sys.exit(-1)
     jsonresponse = response.json()
-    return jsonresponse  # json response will be either a dictionary or a list of dictionaries
+    return jsonresponse  # json response will be a dictionary or a list of dictionaries
 
 
 def write_wufu_data():
@@ -25,7 +26,7 @@ def write_wufu_data():
             for key, value in item.items():
                 outfile.write(f"{key}: {value}\n")
 
-    print_file("datafile.txt")
+    print_file("data.txt")
 
 
 def print_file(file_name):
