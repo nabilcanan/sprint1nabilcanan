@@ -1,11 +1,10 @@
 # Nabil Canan
+import json
 import sys
 import requests
 import sqlite3
-import pytest
 from secrets import wufoo_key
 from requests.auth import HTTPBasicAuth
-import json
 
 
 def get_wufoo_data() -> dict:  # comment to test workflow
@@ -17,50 +16,65 @@ def get_wufoo_data() -> dict:  # comment to test workflow
         sys.exit(-1)
 
     jsonresponse = response.json()
+    # print(jsonresponse['Entries'])
     return jsonresponse['Entries']
 
 
 def write_wufoo_data():
-    conn = sqlite3.connect('wufoo_data.db')
-    c = conn.cursor()
+    try:
+        db_connection = sqlite3.connect('wufoo_data.db')
+        db_cursor = db_connection.cursor()
 
-    # Creates the table making sure it is if not exists and creating the column names
-    c.execute('''CREATE TABLE IF NOT EXISTS entries (Entry_ID text, Title text, First_Name text,
-    Last_Name text, Org_Title text, Organization text, Email text, Org_Website text, Phone_Number text,
-    Time_Period text, Permission text, Opportunities text, Date_Created text, Created_By text, Date_Updated text,
-    Updated_By text)''')
+        db_cursor.execute('''CREATE TABLE IF NOT EXISTS entries (Entry_Id text, noFirst_Name text, Last_Name text, Attendance text, Num_Guest text,
+         Meat_eater text , vegan_or text, gluten_free text, dairy_free text, nothing_here text, other_info text, restrictions text,
+        untitles_here text)''')
 
-    data = get_wufoo_data()
+    except sqlite3.Error as db_error:
+        print(f'A Database Error has occurred: {db_error}')
 
-    for item in data:
-        opportunities = ', '.join([item.get('Field101', ''), item.get('Field102', ''), item.get('Field103', ''),
-                                   item.get('Field104', ''), item.get('Field105', ''), item.get('Field106', ''),
-                                   item.get('Field107', '')])
+    finally:
+        if db_connection:
+            db_connection.close()
+            print('Database connection closed.')
 
-        c.execute("INSERT INTO entries VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)",
-                  (item['EntryId'],
-                   item.get('Field0', ''),
-                   item.get('Field1', ''),
-                   item.get('Field2', ''),
-                   item.get('Field8', ''),
-                   item.get('Field9', ''),
-                   item.get('Field5', ''),
-                   item.get('Field6', ''),
-                   item.get('Field7', ''),
-                   ', '.join([item.get('Field12', ''),
-                              item.get('Field13', ''),
-                              item.get('Field14', ''),
-                              item.get('Field15', ''),
-                              item.get('Field16', '')]),
-                   item.get('Field212', ''),
-                   opportunities,
-                   item.get('DateCreated', ''),
-                   item.get('CreatedBy', ''),
-                   item.get('DateUpdated', ''),
-                   item.get('UpdatedBy', '')))
-    conn.commit()
-    conn.close()
+
+def insert_database(data):
+        try:
+            db_connection = sqlite3.connect('wufoo_data.db')
+            db_cursor = db_connection.cursor()
+
+            db_cursor.execute('DELETE FROM entries')
+
+            for item in data:
+                db_cursor.execute("INSERT INTO entries VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
+                                  (item['EntryId'],
+                                  #first name
+                                  item.get('Field1', ''),
+                                  #last name
+                                  item.get('Field2', ''),
+                                  item.get('Field3', ''),
+                                  item.get('Field4', ''),
+                                   item.get('Field5', ''),
+                                   item.get('Field6', ''),
+                                   item.get('Field7', ''),
+                                   item.get('Field8', ''),
+                                   item.get('Field9', ''),
+                                   item.get('Field10', ''),
+                                   item.get('Field105', ''),
+                                   item.get('Field107', ''),
+
+                                )
+
+        except sqlite3.Error as db_error:
+        # print the error description
+        print(f'A Database Error has occurred: {db_error}')
+
+        finally:
+            # close the database connection whether an error happened or not (if a connection exists)
+            if db_connection:
+                db_connection.close()
+                print('Database connection closed.')
 
 
 if __name__ == "__main__":
-    write_wufoo_data()
+    get_wufoo_data()
