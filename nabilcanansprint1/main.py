@@ -38,9 +38,11 @@ def write_wufoo_data():
         if db_connection:
             db_connection.close()
             print('Database connection closed.')
+    insert_database()
 
 
-def insert_database(data):
+def insert_database():
+    data = get_wufoo_data()
     try:
         db_connection = sqlite3.connect('wufoo_data.db')
         db_cursor = db_connection.cursor()
@@ -48,7 +50,7 @@ def insert_database(data):
         db_cursor.execute('DELETE FROM entries')
 
         for item in data:
-            db_cursor.execute("INSERT INTO entries VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
+            db_cursor.execute("INSERT INTO entries VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
                               (item['EntryId'],
                                # first name
                                item.get('Field1', ''),
@@ -78,6 +80,8 @@ def insert_database(data):
                                item.get('CreatedBy'),
                                item.get('DateUpdated'),
                                item.get('UpdatedBy')))
+
+        db_connection.commit()
 
     except sqlite3.Error as db_error:
         print(f'A Database Error has occurred: {db_error}')
