@@ -1,9 +1,7 @@
 import sqlite3
 import json
 from urllib import response
-
-import pytest
-import main
+from main import get_wufoo_data, database_created, insert_db
 
 
 def test_retrieve_data(self):
@@ -13,7 +11,7 @@ def test_retrieve_data(self):
 
 
 def test_wufoo_data_received():
-    data = main.get_wufoo_data()
+    data = get_wufoo_data()
     assert len(data) == 10
     # asserting 10 for this test
 
@@ -21,7 +19,7 @@ def test_wufoo_data_received():
 def test_database():
     db_connection = sqlite3.connect('../pytest_db.db')
     db_cursor = db_connection()
-    main.database_created('pytest_db.db')
+    database_created('pytest_db.db')
     data = [{"EntryId": "1",
              "Field1": "Nabil",
              "Field2": "Canan",
@@ -40,7 +38,7 @@ def test_database():
              "DateUpdated": ",",
              "UpdatedBy": "None"}]
 
-    main.insert_db('pytest_db.db', 'test', data)
+    insert_db('pytest_db.db', 'test', data)
 
 
 def test_db_entry(db_cursor, item):
