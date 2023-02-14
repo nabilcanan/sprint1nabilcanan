@@ -1,2 +1,2 @@
-wufoo_key = 'PW8U-I4VI-XNI0-YCGM'
+wufoo_key = '556N-JQLN-PCC6-BPWV'
 

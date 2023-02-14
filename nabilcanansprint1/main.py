@@ -8,7 +8,7 @@ from requests.auth import HTTPBasicAuth
 
 
 def get_wufoo_data() -> dict:  # comment to test workflow
-    url = "https://nabilcanan.wufoo.com/api/v3/forms/zhc4c2c17puvvi/entries/json"
+    url = "https://nabilcanan.wufoo.com/api/v3/forms/m16i9gqh089msfx/entries/json"
     response = requests.get(url, auth=HTTPBasicAuth(wufoo_key, 'pass'))
 
     if response.status_code != 200:
