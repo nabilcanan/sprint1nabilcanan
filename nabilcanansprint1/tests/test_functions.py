@@ -19,7 +19,7 @@ def test_wufoo_data_received():
 
 
 def test_database():
-    db_connection = sqlite3.connect('pytest_db.db')
+    db_connection = sqlite3.connect('../pytest_db.db')
     db_cursor = db_connection()
     main.database_created('pytest_db.db')
     data = [{"EntryId": "1",
